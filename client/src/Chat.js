@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import io from 'socket.io-client';
 let socket = io('http://localhost:5000');
 
@@ -9,31 +9,37 @@ export default function Chat(props) {
   const [countClient, setCountClient] = useState();
   const [connectNewUSerText, setConnectNewUSerText] = useState(null);
   const [chatColor, setChatColor] = useState('#414042');
+  let arr = []
 
   function sendMessage(e) {
     e.preventDefault();
     socket.emit('sendMess', {mess, name: props.user.name, color: chatColor});
-    console.log(1)
     setMess('');
     e.target.reset()
   };
 
-  socket.on('clientCount', count => {
-    setCountClient(count)
-    console.log(2)
-  });
+  useEffect(() => {
+    socket.on('clientCount', count => {
+      setCountClient(count);
+    });
 
-  socket.on('addMess', ({msg}) => {
-    setListMess(listMess.concat(msg))
+    socket.on('addMess', (msg) => {
+      const {name} = msg;
+      console.log(name)
+      console.log(msg, '-0-')
+      setListMess('999');
+      arr.push(msg)
+      console.log(listMess, '/*/*/*')
+    });
 
-    console.log(3)
-  });
+    socket.on('user connected', text => {
+      setConnectNewUSerText(text);
+      setTimeout(()=>setConnectNewUSerText(null), 1500);
+    });
+  }, []);
 
-  socket.on('user connected', text => {
-    setConnectNewUSerText(text);
-    setTimeout(()=>setConnectNewUSerText(null), 1500);
-    console.log(4)
-  });
+  console.log(typeof listMess, listMess,'|||')
+  console.log(arr, '1arr22')
 
   return (
     <>
@@ -42,7 +48,8 @@ export default function Chat(props) {
       {connectNewUSerText?<div>{connectNewUSerText}</div>:null}
       <div>
         {
-           listMess.map(({name, mess, color}, i) => <p key={i}><b style={{color: color}}>{name} - </b>{mess}</p>)
+          console.log(listMess, '666')
+           //listMess.map(({name, mess, color}, i) => <p key={i}><b style={{color: color}}>{name} - </b>{mess}</p>)
         }
       </div>
       <form onSubmit={sendMessage}>
