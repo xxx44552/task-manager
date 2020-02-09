@@ -46,8 +46,6 @@ io.on('connection', (socket) => {
     io.emit('addMess', {msg})
   });
 
-
-
   io.emit('clientCount', clientCount);
 
   socket.broadcast.emit('user connected' , `Подключен к чату`);

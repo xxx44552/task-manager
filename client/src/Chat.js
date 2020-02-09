@@ -1,65 +1,76 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import io from 'socket.io-client';
 let socket = io('http://localhost:5000');
 
-export default function Chat(props) {
+export default class Chat extends React.Component {
 
-  const [listMess, setListMess] = useState([]);
-  const [mess, setMess] = useState('');
-  const [countClient, setCountClient] = useState();
-  const [connectNewUSerText, setConnectNewUSerText] = useState(null);
-  const [chatColor, setChatColor] = useState('#414042');
-  let arr = []
+  constructor() {
+    super();
 
-  function sendMessage(e) {
+    this.state = {
+      listMess: [],
+      mess: '',
+      countClient: null,
+      connectNewUSerText: null,
+      chatColor: '#414042'
+    }
+  }
+
+  sendMessage = (e) => {
     e.preventDefault();
-    socket.emit('sendMess', {mess, name: props.user.name, color: chatColor});
-    setMess('');
+    socket.emit('sendMess', {mess: this.state.mess, name: this.props.user.name, color: this.state.chatColor});
     e.target.reset()
   };
 
-  useEffect(() => {
+
+
+  componentDidMount() {
     socket.on('clientCount', count => {
-      setCountClient(count);
+      this.setState({
+        countClient: count
+      })
     });
 
     socket.on('addMess', (msg) => {
-      const {name} = msg;
-      console.log(name)
-      console.log(msg, '-0-')
-      setListMess('999');
-      arr.push(msg)
-      console.log(listMess, '/*/*/*')
+      this.setState({
+        listMess: this.state.listMess.concat(msg)
+      })
     });
 
     socket.on('user connected', text => {
-      setConnectNewUSerText(text);
-      setTimeout(()=>setConnectNewUSerText(null), 1500);
+      this.setState({
+        connectNewUSerText: text
+      });
+      setTimeout(()=>this.setState({connectNewUSerText: null}), 1500);
     });
-  }, []);
+  }
 
-  console.log(typeof listMess, listMess,'|||')
-  console.log(arr, '1arr22')
 
-  return (
-    <>
-      <h2>Chat</h2>
-      <h5>Колличесвто подключенных пользователей {countClient}</h5>
-      {connectNewUSerText?<div>{connectNewUSerText}</div>:null}
-      <div>
-        {
-          console.log(listMess, '666')
-           //listMess.map(({name, mess, color}, i) => <p key={i}><b style={{color: color}}>{name} - </b>{mess}</p>)
-        }
-      </div>
-      <form onSubmit={sendMessage}>
-        <textarea onChange={e=>setMess(e.target.value)}></textarea>
-        <input type='color' defaultValue={chatColor} onChange={e=> {
-          setChatColor(e.target.value)
-        }}/>
-        <button>Отправить</button>
-      </form>
-    </>
-  )
+  render() {
+
+    const {listMess, connectNewUSerText, countClient, chatColor} = this.state;
+
+    return (
+        <>
+          <h2>Chat</h2>
+          <h5>Колличесвто подключенных пользователей {countClient}</h5>
+          {connectNewUSerText?<div>{connectNewUSerText}</div>:null}
+          <div>
+            {
+              listMess.map((el, i) => {
+                return <p key={i}><b style={{color: el.msg.color}}>{el.msg.name} - </b>{el.msg.mess}</p>
+              })
+            }
+          </div>
+          <form onSubmit={this.sendMessage}>
+            <textarea onChange={e=>this.setState({mess: e.target.value})}></textarea>
+            <input type='color' defaultValue={chatColor} onChange={e=> {
+              this.setState({chatColor: e.target.value})
+            }}/>
+            <button>Отправить</button>
+          </form>
+        </>
+    )
+  }
 }
 
