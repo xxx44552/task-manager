@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {NavLink} from 'react-router-dom'
 import Login from "./Login";
-import CreateTask from "./createTask";
+import TaskManager from "./taskManager";
 import Confirm from "./confirmEmail";
 import Edit from "./editUser";
 import Chat from "./Chat";
@@ -44,7 +44,7 @@ export default function App() {
                 <p>{user.email}</p>
                 <img alt='avatar' src={`/user/${user._id}/avatar`} />
                 <NavLink exact to="/edit">Edit user info</NavLink>
-                <CreateTask/>
+                <TaskManager/>
                 <Chat user={user}/>
               </div>
         }

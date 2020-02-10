@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
   socket.on('sendMess', (msg) => {
     console.log(msg)
     console.log(4)
-    io.emit('addMess', {msg})
+    io.emit('addMess', msg)
   });
 
   io.emit('clientCount', clientCount);

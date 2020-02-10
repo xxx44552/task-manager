@@ -12,7 +12,7 @@ export default class Chat extends React.Component {
       mess: '',
       countClient: null,
       connectNewUSerText: null,
-      chatColor: '#414042'
+      chatColor: localStorage.getItem('messColor') || '#414042'
     }
   }
 
@@ -20,6 +20,7 @@ export default class Chat extends React.Component {
     e.preventDefault();
     socket.emit('sendMess', {mess: this.state.mess, name: this.props.user.name, color: this.state.chatColor});
     e.target.reset()
+    localStorage.setItem('messColor', this.state.chatColor)
   };
 
 
@@ -58,7 +59,8 @@ export default class Chat extends React.Component {
           <div>
             {
               listMess.map((el, i) => {
-                return <p key={i}><b style={{color: el.msg.color}}>{el.msg.name} - </b>{el.msg.mess}</p>
+                console.log(el)
+                return <p key={i}><b style={{color: el.color}}>{el.name} - </b>{el.mess}</p>
               })
             }
           </div>

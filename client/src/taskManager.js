@@ -1,14 +1,17 @@
 import React, {useState, useEffect} from 'react';
 
-export default function CreateTask(props) {
+export default function TaskManager(props) {
 
   const [title, setTitle] = useState(null);
   const [tasks, setTasks] = useState([]);
   const token = localStorage.getItem('tokenApi');
-  const step = 5;
-  let skip = step;
+  const [step, setStep] = useState(5);
+  const [skip, setSkip] = useState(step);
+  const [hideShowMoreBtn, setHideShowMoreBtn] = useState(false);
 
   const completedTask = {textDecorationLine: 'line-through'};
+  const hide = {display: 'none'};
+
 
   useEffect(()=> {
     fetch('/api', {
@@ -19,8 +22,9 @@ export default function CreateTask(props) {
       }
     }).then( res => res.json()).then(data => {
       setTasks(data.tasks)
+      console.log(data.tasks)
     })
-  }, [])
+  }, []);
 
   function task(e) {
 
@@ -61,6 +65,7 @@ export default function CreateTask(props) {
   function setChecked(e) {
     const value = e.target.checked;
     const id = e.target.dataset.id;
+    const task = e.target.closest('.task')
     fetch(`/task/${id}/?completed=${value}`, {
       method: 'post',
       body: JSON.stringify({completed: value}),
@@ -69,11 +74,47 @@ export default function CreateTask(props) {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       }
-    }).then((res)=>console.log(res))
+    }).then(()=>{
+      if(value) {
+        task.style.textDecoration = 'line-through';
+        tasks.map(el=> {
+          if(el._id == id) {
+            el.status = true
+            console.log(el)
+          }
+        })
+      }else {
+        task.style.textDecoration = 'none';
+        tasks.map(el=> {
+          if(el._id == id) {
+            el.status = false
+            console.log(el)
+          }
+        })
+      }
+    })
   }
 
   function showMoreTask() {
+    fetch(`/tasks?skip=${skip}&limit=${step}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }).then((res)=> {
+      setSkip(skip + step);
+      return res.json();
+    }).then(data=>{
+      setTasks(tasks.concat(data));
+      console.log(data)
+      if(data.length < 5) setHideShowMoreBtn(true);
+    })
+  }
 
+  function hideCompletedTasks(e) {
+    const status = Number(e.target.value);
+    tasks.map(el => console.log(el))
   }
   
   return (
@@ -85,18 +126,22 @@ export default function CreateTask(props) {
           <input type='submit' value='Отправить'/>
         </form>
         <hr />
+        <div>
+          <select onChange={hideCompletedTasks}>
+            <option value='0'>Показать выполненные</option>
+            <option value='1'>Скрыть выполненные</option>
+          </select>
+        </div>
+        <hr />
         {
-
           tasks.map(({title, status, _id}) => {
-            return <div key={_id} className='task'>
-              <div>
-                <span className='title' style={status?completedTask:null}>{title}</span><span> ||| status: <input data-id={_id} type='checkbox' onChange={setChecked} defaultChecked={status}/></span>
-                <button data-id={_id} onClick={e=>del(e)}>del</button>
-              </div>
+            return <div key={_id} style={status ? completedTask : null} className='task'>
+              <span className='title'>{title}</span><span> ||| status: <input data-id={_id} type='checkbox' onChange={setChecked} defaultChecked={status}/></span>
+              <button data-id={_id} onClick={e=>del(e)}>del</button>
             </div>
           })
         }
-        <button>Показать еще</button>
+        {!hideShowMoreBtn ? <button onClick={showMoreTask}>Показать еще</button> : null}
       </>
   );
 }
