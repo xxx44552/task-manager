@@ -22,7 +22,6 @@ export default function TaskManager(props) {
       }
     }).then( res => res.json()).then(data => {
       setTasks(data.tasks)
-      console.log(data.tasks)
     })
   }, []);
 
@@ -57,7 +56,7 @@ export default function TaskManager(props) {
       }
     })
       .then(() => {
-        setTasks(tasks.filter(el=>el._id !== id))
+        setTasks(tasks.filter(el=>el._id !== id));
         console.log(id)
       })
   };
@@ -65,7 +64,6 @@ export default function TaskManager(props) {
   function setChecked(e) {
     const value = e.target.checked;
     const id = e.target.dataset.id;
-    const task = e.target.closest('.task')
     fetch(`/task/${id}/?completed=${value}`, {
       method: 'post',
       body: JSON.stringify({completed: value}),
@@ -76,21 +74,19 @@ export default function TaskManager(props) {
       }
     }).then(()=>{
       if(value) {
-        task.style.textDecoration = 'line-through';
-        tasks.map(el=> {
-          if(el._id == id) {
+        setTasks(tasks.map(el=>{
+          if(el._id === id) {
             el.status = true
-            console.log(el)
           }
-        })
+          return el
+        }))
       }else {
-        task.style.textDecoration = 'none';
-        tasks.map(el=> {
-          if(el._id == id) {
+        setTasks(tasks.map(el=>{
+          if(el._id === id) {
             el.status = false
-            console.log(el)
           }
-        })
+          return el
+        }))
       }
     })
   }

@@ -17,8 +17,7 @@ export default function Logout(props) {
       }})
         .then((res) => res.json()).then(data => {
           if(data.redirect) {
-
-
+            window.location.href = '/login';
           }
     })
   }
