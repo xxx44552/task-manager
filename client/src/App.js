@@ -5,6 +5,7 @@ import TaskManager from "./taskManager";
 import Confirm from "./confirmEmail";
 import Edit from "./editUser";
 import Chat from "./Chat";
+import Logout from "./logout";
 
 
 export default function App() {
@@ -44,6 +45,7 @@ export default function App() {
                 <p>{user.email}</p>
                 <img alt='avatar' src={`/user/${user._id}/avatar`} />
                 <NavLink exact to="/edit">Edit user info</NavLink>
+                <Logout/>
                 <TaskManager/>
                 <Chat user={user}/>
               </div>

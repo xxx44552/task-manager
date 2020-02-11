@@ -76,4 +76,16 @@ router.put('/user/edit', auth, async(req, res) => {
   }
 });
 
+router.get('/logout', auth, async (req, res) => {
+  try {
+    const authToken = req.authToken;
+
+    req.user.tokens = req.user.tokens.filter(t => t.token !== authToken);
+    await req.user.save();
+    res.send({redirect: true, redirectUrl: '/login'})
+  }catch (e) {
+    res.send(400)
+  }
+});
+
 module.exports = router;
