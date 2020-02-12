@@ -13,25 +13,32 @@ export default class Chat extends React.Component {
       mess: '',
       countClient: null,
       connectNewUSerText: null,
-      chatColor: localStorage.getItem('messColor') || '#414042'
+      chatColor: localStorage.getItem('messColor') || '#414042',
+      showChat: false
     }
   }
 
   sendMessage = (e) => {
+    if(!this.state.mess) return;
     e.preventDefault();
     socket.emit('sendMess', {mess: this.state.mess, name: this.props.user.name, color: this.state.chatColor});
-    e.target.reset()
+    e.target.reset();
+    this.setState({mess: ''});
     localStorage.setItem('messColor', this.state.chatColor)
   };
 
-
-
-  componentDidMount() {
+  getCountChatUser = () => {
     socket.on('clientCount', count => {
+      console.log(count, '0-0-')
       this.setState({
         countClient: count
       })
     });
+  }
+
+  componentDidMount() {
+
+    this.getCountChatUser();
 
     socket.on('addMess', (msg) => {
       this.setState({
@@ -48,37 +55,43 @@ export default class Chat extends React.Component {
   }
 
 
+
   render() {
 
-    const {listMess, connectNewUSerText, countClient, chatColor} = this.state;
-    console.log(countClient, '-=-=-')
+    const {listMess, connectNewUSerText, countClient, chatColor, showChat} = this.state;
+
     return (
         <>
-          <div className="card chat" style={{"width": "250px"}}>
-            <div className="card-body">
-              <h5>Чат</h5>
-              <span className={'small'}>Кол. подкл. пользователей {countClient}</span>
-              {connectNewUSerText?<div>{connectNewUSerText}</div>:null}
-              <div>
-                {
-                  listMess.map((el, i) => {
-                    console.log(el)
-                    return <h6  key={i}><b style={{color: el.color}}>{el.name} - </b>{el.mess}</h6>
-                  })
-                }
-              </div>
-              <form onSubmit={this.sendMessage}>
-                <textarea className={'form-control'} onChange={e=>this.setState({mess: e.target.value})}></textarea>
-                <div className="chat-group">
-                  <span>Цвет:</span>
-                  <input type='color' defaultValue={chatColor} onChange={e=> {
-                    this.setState({chatColor: e.target.value})
-                  }}/>
-                  <button className={'btn btn-outline-success add-text'}>Отправить</button>
+          <button onClick={() => this.setState({showChat: !showChat})}>Показать чат</button>
+          {
+            showChat ?
+                <div className="chat">
+                  <button onClick={() => this.setState({showChat: !showChat})}>Закрыть чат</button>
+                  <div className="card-body">
+                    <h5>Чат</h5>
+                    <span className={'small'}>Кол. подкл. пользователей {countClient}</span>
+                    {connectNewUSerText?<div>{connectNewUSerText}</div>:null}
+                    <div>
+                      {
+                        listMess.map((el, i) => {
+                          return <h6  key={i}><b style={{color: el.color}}>{el.name} - </b>{el.mess}</h6>
+                        })
+                      }
+                    </div>
+                    <form onSubmit={this.sendMessage}>
+                      <textarea className={'form-control'} onChange={e=>this.setState({mess: e.target.value})}></textarea>
+                      <div className="chat-group">
+                        <span>Цвет:</span>
+                        <input type='color' defaultValue={chatColor} onChange={e=> {
+                          this.setState({chatColor: e.target.value})
+                        }}/>
+                        <button className={'btn btn-outline-success add-text'}>Отправить</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-              </form>
-            </div>
-          </div>
+                : null
+          }
         </>
     )
   }
