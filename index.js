@@ -42,7 +42,6 @@ io.on('connection', (socket) => {
 
   socket.on('sendMess', (msg) => {
     console.log(msg)
-    console.log(4)
     io.emit('addMess', msg)
   });
 
@@ -51,7 +50,6 @@ io.on('connection', (socket) => {
   socket.broadcast.emit('user connected' , `Подключен к чату`);
 
   socket.on('disconnect', function () {
-    console.log(6)
     clientCount = socket.server.engine.clientsCount;
     io.emit('clientCount', clientCount);
   });
