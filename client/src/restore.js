@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {NavLink} from "react-router-dom";
 
 export default function Restore() {
 
@@ -16,10 +17,24 @@ export default function Restore() {
   }
 
   return (
-      <form onSubmit={res}>
-        <h3>Восстановление пароля</h3>
-        <input type='email' name='email' onChange={e=>setEmail(e.target.value)} placeholder='Почта'/>
-        <input type='submit' value='Отправить'/>
-      </form>
+      <>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item">
+                <NavLink className="nav-link" to={'/login'}>Авторизироваться</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to={'/reg'}>Регистрация</NavLink>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <form onSubmit={res}>
+          <h3>Восстановление пароля</h3>
+          <input type='email' name='email' onChange={e=>setEmail(e.target.value)} placeholder='Почта'/>
+          <input type='submit' value='Отправить'/>
+        </form>
+      </>
   );
 }

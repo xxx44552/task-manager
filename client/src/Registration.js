@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import {NavLink, useHistory} from 'react-router-dom';
+
 
 export default function Registration() {
 
@@ -6,6 +8,7 @@ export default function Registration() {
   const [email, setEmail] = useState(null);
   const [age, setAge] = useState(null);
   const [password, setPassword] = useState(null);
+  const history = useHistory();
 
   function reg(e) {
     e.preventDefault();
@@ -18,17 +21,34 @@ export default function Registration() {
       }
     })
         .then( res => res.json())
-        .then(token => localStorage.setItem('tokenApi', token.token))
+        .then(data => {
+          localStorage.setItem('tokenApi', data.token);
+          if(data.redirect) {
+            history.push('/');
+          }
+        })
         .catch(e=>console.log(e))
   }
 
   return (
-      <form onSubmit={e=>reg(e)}>
-        <input type='text' name='userName' onChange={e=>setName(e.target.value)} placeholder='Имя'/>
-        <input type='email' name='email' onChange={e=>setEmail(e.target.value)} placeholder='Почта'/>
-        <input type='number' name='age' onChange={e=>setAge(e.target.value)} placeholder='Возраст'/>
-        <input type='password' name='password' onChange={e=>setPassword(e.target.value)} placeholder='Пароль'/>
-        <input type='submit' value='Отправить'/>
-      </form>
+      <>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item">
+                <NavLink className="nav-link" to={'/login'}>Авторизироваться</NavLink>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <form onSubmit={e=>reg(e)}>
+          <input type='text' name='userName' onChange={e=>setName(e.target.value)} placeholder='Имя'/>
+          <input type='email' name='email' onChange={e=>setEmail(e.target.value)} placeholder='Почта'/>
+          <input type='number' name='age' onChange={e=>setAge(e.target.value)} placeholder='Возраст'/>
+          <input type='password' name='password' onChange={e=>setPassword(e.target.value)} placeholder='Пароль'/>
+          <input type='submit' value='Отправить'/>
+        </form>
+
+      </>
   );
 }

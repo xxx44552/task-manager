@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import Avatar from "./Avatar";
+import {NavLink} from "react-router-dom";
 
 export default function Edit () {
   const [name, setName] = useState(null);
@@ -7,7 +8,6 @@ export default function Edit () {
   const [age, setAge] = useState(null);
   const [password, setPassword] = useState(null);
   const token = localStorage.getItem('tokenApi');
-
 
   function changeData(e) {
     e.preventDefault();
@@ -31,6 +31,15 @@ export default function Edit () {
 
   return (
       <>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item active">
+                <NavLink className="nav-link" exact to="/">Главная</NavLink>
+              </li>
+            </ul>
+          </div>
+        </nav>
         <form onSubmit={changeData}>
           <h3>Edit user information</h3>
           <input type='text' onChange={e=>setName(e.target.value)} placeholder='Name'/>

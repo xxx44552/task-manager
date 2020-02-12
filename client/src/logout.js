@@ -1,14 +1,12 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import {NavLink, useHistory} from 'react-router-dom';
 
-export default function Logout(props) {
+export default function Logout() {
 
   const token = localStorage.getItem('tokenApi');
-
-  console.log(props)
+  const history = useHistory();
 
   function logout() {
-    console.log(1)
     fetch('/logout', {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -17,12 +15,14 @@ export default function Logout(props) {
       }})
         .then((res) => res.json()).then(data => {
           if(data.redirect) {
-            window.location.href = '/login';
+            history.push(data.redirectUrl)
           }
     })
   }
 
   return (
-      <button onClick={logout}>Выйти</button>
+      <li onClick={logout} className="nav-item bg-danger close">
+        <NavLink className="nav-link" exact to="/">Выйти</NavLink>
+      </li>
   )
 }

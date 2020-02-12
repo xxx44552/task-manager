@@ -8,9 +8,9 @@ export default function TaskManager(props) {
   const [step, setStep] = useState(5);
   const [skip, setSkip] = useState(step);
   const [hideShowMoreBtn, setHideShowMoreBtn] = useState(false);
+  const [hideCompleted, setHideCompleted] = useState(false);
 
   const completedTask = {textDecorationLine: 'line-through'};
-  const hide = {display: 'none'};
 
 
   useEffect(()=> {
@@ -92,7 +92,8 @@ export default function TaskManager(props) {
   }
 
   function showMoreTask() {
-    fetch(`/tasks?skip=${skip}&limit=${step}`, {
+    console.log(hideCompleted)
+    fetch(`/tasks?completed=${hideCompleted}&skip=${skip}&limit=${step}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -110,34 +111,65 @@ export default function TaskManager(props) {
 
   function hideCompletedTasks(e) {
     const status = Number(e.target.value);
-    tasks.map(el => console.log(el))
-  }
-  
-  return (
-
-      <>
-        <hr />
-          <form onSubmit={e=>task(e)}>
-          <textarea onChange={e=>setTitle(e.target.value)}></textarea>
-          <input type='submit' value='Отправить'/>
-        </form>
-        <hr />
-        <div>
-          <select onChange={hideCompletedTasks}>
-            <option value='0'>Показать выполненные</option>
-            <option value='1'>Скрыть выполненные</option>
-          </select>
-        </div>
-        <hr />
-        {
-          tasks.map(({title, status, _id}) => {
-            return <div key={_id} style={status ? completedTask : null} className='task'>
-              <span className='title'>{title}</span><span> ||| status: <input data-id={_id} type='checkbox' onChange={setChecked} defaultChecked={status}/></span>
-              <button data-id={_id} onClick={e=>del(e)}>del</button>
-            </div>
-          })
+    if(status) {
+      setSkip(5);
+      setHideCompleted(true);
+      fetch(`/tasks?completed=${hideCompleted}&limit=${step}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
-        {!hideShowMoreBtn ? <button onClick={showMoreTask}>Показать еще</button> : null}
+      }).then(res=>res.json()).then(data=>setTasks(data));
+    }else {
+      setSkip(5);
+      setHideCompleted(false);
+      fetch(`/tasks?completed=${hideCompleted}&limit=${step}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }).then(res=>res.json()).then(data=>setTasks(data));
+    }
+  }
+
+  return (
+      <>
+        <div className={'col-9 main'}>
+          <div>
+            <form onSubmit={e=>task(e)}>
+              <div className="form-group">
+                <label htmlFor="exampleFormControlTextarea1">Добавить новое задание</label>
+                <textarea onChange={e=>setTitle(e.target.value)} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+              </div>
+              <input type='submit' className={'btn btn-primary'} value='Отправить'/>
+            </form>
+            <hr />
+            <div>
+              <select onChange={hideCompletedTasks}>
+                <option value='0'>Показать выполненные</option>
+                <option value='1'>Скрыть выполненные</option>
+              </select>
+            </div>
+            <hr />
+          </div>
+          <div className="tasks-wrap">
+            {
+              tasks ? tasks.map(({title, status, _id}, i) => {
+                return <div key={_id} className={'list-group task'}>
+                  <p className={status ? "list-group-item list-group-item-success item" : "list-group-item"}>{title}</p>
+                  <div className="custom-control custom-switch">
+                    <input data-id={_id} type='checkbox' onChange={setChecked} defaultChecked={status} className="custom-control-input" id={`customSwitch${i}`} />
+                    <label className="custom-control-label" htmlFor={`customSwitch${i}`}></label>
+                  </div>
+                  <button className={'badge badge-danger'} data-id={_id} onClick={e=>del(e)}>Удалить</button>
+                </div>
+              }) : null
+            }
+          </div>
+          {!hideShowMoreBtn ? <button className={'btn btn-success'} onClick={showMoreTask}>Показать еще</button> : null}
+        </div>
       </>
   );
 }

@@ -7,6 +7,8 @@ import Login from "./Login";
 import Restore from "./restore";
 import {BrowserRouter} from "react-router-dom";
 import editUser from "./editUser";
+import './style/style.sass'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 ReactDOM.render(
     <BrowserRouter>

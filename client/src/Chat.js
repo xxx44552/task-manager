@@ -1,5 +1,6 @@
 import React from 'react';
 import io from 'socket.io-client';
+import {NavLink} from "react-router-dom";
 let socket = io('http://localhost:5000');
 
 export default class Chat extends React.Component {
@@ -50,27 +51,34 @@ export default class Chat extends React.Component {
   render() {
 
     const {listMess, connectNewUSerText, countClient, chatColor} = this.state;
-
+    console.log(countClient, '-=-=-')
     return (
         <>
-          <h2>Chat</h2>
-          <h5>Колличесвто подключенных пользователей {countClient}</h5>
-          {connectNewUSerText?<div>{connectNewUSerText}</div>:null}
-          <div>
-            {
-              listMess.map((el, i) => {
-                console.log(el)
-                return <p key={i}><b style={{color: el.color}}>{el.name} - </b>{el.mess}</p>
-              })
-            }
+          <div className="card chat" style={{"width": "250px"}}>
+            <div className="card-body">
+              <h5>Чат</h5>
+              <span className={'small'}>Кол. подкл. пользователей {countClient}</span>
+              {connectNewUSerText?<div>{connectNewUSerText}</div>:null}
+              <div>
+                {
+                  listMess.map((el, i) => {
+                    console.log(el)
+                    return <h6  key={i}><b style={{color: el.color}}>{el.name} - </b>{el.mess}</h6>
+                  })
+                }
+              </div>
+              <form onSubmit={this.sendMessage}>
+                <textarea className={'form-control'} onChange={e=>this.setState({mess: e.target.value})}></textarea>
+                <div className="chat-group">
+                  <span>Цвет:</span>
+                  <input type='color' defaultValue={chatColor} onChange={e=> {
+                    this.setState({chatColor: e.target.value})
+                  }}/>
+                  <button className={'btn btn-outline-success add-text'}>Отправить</button>
+                </div>
+              </form>
+            </div>
           </div>
-          <form onSubmit={this.sendMessage}>
-            <textarea onChange={e=>this.setState({mess: e.target.value})}></textarea>
-            <input type='color' defaultValue={chatColor} onChange={e=> {
-              this.setState({chatColor: e.target.value})
-            }}/>
-            <button>Отправить</button>
-          </form>
         </>
     )
   }
