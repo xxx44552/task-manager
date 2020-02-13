@@ -10,9 +10,6 @@ export default function TaskManager(props) {
   const [hideShowMoreBtn, setHideShowMoreBtn] = useState(false);
   const [hideCompleted, setHideCompleted] = useState(false);
 
-  const completedTask = {textDecorationLine: 'line-through'};
-
-
   useEffect(()=> {
     fetch('/api', {
       headers: {
@@ -22,6 +19,7 @@ export default function TaskManager(props) {
       }
     }).then( res => res.json()).then(data => {
       setTasks(data.tasks)
+
     })
   }, []);
 
@@ -111,26 +109,36 @@ export default function TaskManager(props) {
 
   function hideCompletedTasks(e) {
     const status = Number(e.target.value);
+    console.log(status)
     if(status) {
-      setSkip(5);
-      setHideCompleted(true);
-      fetch(`/tasks?completed=${hideCompleted}&limit=${step}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      }).then(res=>res.json()).then(data=>setTasks(data));
-    }else {
+
       setSkip(5);
       setHideCompleted(false);
+      setHideShowMoreBtn(false);
       fetch(`/tasks?completed=${hideCompleted}&limit=${step}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         }
-      }).then(res=>res.json()).then(data=>setTasks(data));
+      }).then(res=>res.json()).then(data=>{
+        setTasks(data);
+        console.log(data);
+      });
+    }else {
+      setSkip(5);
+      setHideCompleted(true);
+      setHideShowMoreBtn(false);
+      fetch(`/tasks?completed=${hideCompleted}&limit=${step}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }).then(res=>res.json()).then(data=>{
+        setTasks(data)
+        console.log(data);
+      });
     }
   }
 
@@ -147,16 +155,16 @@ export default function TaskManager(props) {
             </form>
             <hr />
             <div>
-              <select onChange={hideCompletedTasks}>
-                <option value='0'>Показать выполненные</option>
-                <option value='1'>Скрыть выполненные</option>
+              <select className={"form-control"} onChange={hideCompletedTasks}>
+                <option value='0'>Все</option>
+                <option value='1'>Показать выполненные</option>
               </select>
             </div>
             <hr />
           </div>
           <div className="tasks-wrap">
             {
-              tasks ? tasks.map(({title, status, _id}, i) => {
+              tasks.length !== 0 ? tasks.map(({title, status, _id}, i) => {
                 return <div key={_id} className={'list-group task'}>
                   <p className={status ? "list-group-item list-group-item-success item" : "list-group-item"}>{title}</p>
                   <div className="custom-control custom-switch">
@@ -165,7 +173,7 @@ export default function TaskManager(props) {
                   </div>
                   <button className={'badge badge-danger'} data-id={_id} onClick={e=>del(e)}>Удалить</button>
                 </div>
-              }) : null
+              }) : <h5>Нету еще тасков</h5>
             }
           </div>
           {!hideShowMoreBtn ? <button className={'btn btn-success'} onClick={showMoreTask}>Показать еще</button> : null}

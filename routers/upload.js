@@ -1,17 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const User = require('./../models/user');
 const auth = require('./../midlleware/auth');
 const multer  = require('multer')
-const upload = multer({
-
-  fileFilter(req, file, callback) {
-    if(!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-      return callback('Error type file')
-    }
-    callback(false, true)
-  }
-});
+const upload = multer();
 
 router.post('/upload', auth, upload.single('avatar'), async function (req, res) {
   console.log(req.file)

@@ -41,12 +41,13 @@ export default function Registration() {
             </ul>
           </div>
         </nav>
-        <form onSubmit={e=>reg(e)}>
+        <form className={'login-form'} onSubmit={e=>reg(e)}>
+          <h5>Регистрация</h5>
           <input type='text' name='userName' onChange={e=>setName(e.target.value)} placeholder='Имя'/>
           <input type='email' name='email' onChange={e=>setEmail(e.target.value)} placeholder='Почта'/>
           <input type='number' name='age' onChange={e=>setAge(e.target.value)} placeholder='Возраст'/>
           <input type='password' name='password' onChange={e=>setPassword(e.target.value)} placeholder='Пароль'/>
-          <input type='submit' value='Отправить'/>
+          <input className={'btn btn-primary'} type='submit' value='Отправить'/>
         </form>
 
       </>

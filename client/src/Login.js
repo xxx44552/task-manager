@@ -42,11 +42,11 @@ export default function Login(props) {
             </ul>
           </div>
         </nav>
-        <form onSubmit={e=>reg(e)}>
+        <form className={'login-form'} onSubmit={e=>reg(e)}>
           <h5>Авторизация</h5>
           <input type='email' name='email' onChange={e=>setEmail(e.target.value)} placeholder='Почта'/>
           <input type='password' name='password' onChange={e=>setPassword(e.target.value)} placeholder='Пароль'/>
-          <input type='submit' value='Отправить'/>
+          <input className={'btn btn-primary'} type='submit' value='Отправить'/>
         </form>
 
 

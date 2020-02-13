@@ -25,7 +25,7 @@ router.post('/registration', async function (req, res) {
   user.save()
     .then(user=>{
       sendEmail.confirmEmail(user.email, user.confirm.token)
-      res.send({token});
+      res.send({token, redirect: true});
       console.log(`Save: ${user}`);
     })
     .catch((e) => {
@@ -43,17 +43,14 @@ router.get('/user/:id/avatar', async (req, res) => {
     res.set('Content-Type', 'image/jpg');
     res.send(user.avatar);
   }catch (e) {
-    //console.log(e)
+    console.log(e)
   }
 });
 
 router.put('/user/edit', auth, async(req, res) => {
   const updates = Object.keys(req.body).filter(i=>req.body[i] !== null);
-  console.log(updates, '---')
   const allowedUpdates = ['name', 'email', 'password', 'age'];
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
-
-
 
   if (!isValidOperation) {
     return res.status(400).send({ error: 'Invalid updates!' });

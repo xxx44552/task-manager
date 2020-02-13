@@ -30,10 +30,10 @@ export default function Restore() {
             </ul>
           </div>
         </nav>
-        <form onSubmit={res}>
-          <h3>Восстановление пароля</h3>
+        <form className={'login-form'} onSubmit={res}>
+          <h5>Восстановление пароля</h5>
           <input type='email' name='email' onChange={e=>setEmail(e.target.value)} placeholder='Почта'/>
-          <input type='submit' value='Отправить'/>
+          <input className={'btn btn-primary'} type='submit' value='Отправить'/>
         </form>
       </>
   );
