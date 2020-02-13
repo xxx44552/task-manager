@@ -31,6 +31,8 @@ export default function App() {
           history.push('/login')
         }
       })
+    }else {
+      history.push('/login')
     }
 
   }, []);

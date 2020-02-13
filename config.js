@@ -1,5 +1,5 @@
 const config = {
-  port: process.env.PORT || 5000,
+  port: 8081,
   secret: 'awjkh34oujklw3dkjh'
 };
 

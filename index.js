@@ -32,6 +32,10 @@ app.use(uploadRouter);
 app.use(restoreRouter);
 app.use(confirmRouter);
 
+app.get("/*", function(req, res){
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
+
 let clientCount = 0;
 
 io.on('connection', (socket) => {
