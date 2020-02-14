@@ -40,16 +40,19 @@ export default function Edit () {
             </ul>
           </div>
         </nav>
-        <form onSubmit={changeData}>
-          <h3>Edit user information</h3>
-          <input type='text' onChange={e=>setName(e.target.value)} placeholder='Name'/>
-          <input type='email' onChange={e=>setEmail(e.target.value)} placeholder='Email' />
-          <input type='number' onChange={e=>setAge(e.target.value)} placeholder='Age'/>
-          <input type='password' onChange={e=>setPassword(e.target.value)} placeholder='Password'/>
-          <input type='submit' value='Change'/>
-        </form>
-        <p>Change user avatar</p>
-        <Avatar/>
+        <div className="container">
+          <form className={'edit-form'} onSubmit={changeData}>
+            <h5>Информация пользователя</h5>
+            <input type='text' onChange={e=>setName(e.target.value)} placeholder='Name'/>
+            <input type='email' onChange={e=>setEmail(e.target.value)} placeholder='Email' />
+            <input type='number' onChange={e=>setAge(e.target.value)} placeholder='Age'/>
+            <input type='password' onChange={e=>setPassword(e.target.value)} placeholder='Password'/>
+            <input className={'btn btn-primary'} type='submit' value='Сохранить'/>
+          </form>
+          <hr />
+          <p>Выберите фото профиля</p>
+          <Avatar/>
+        </div>
       </>
   )
 };

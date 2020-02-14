@@ -26,9 +26,7 @@
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(() => {
-          console.log(JSON.stringify(data))
-        })
+        }).then(res => res.json()).then(data => data.redirect ? window.location.href = data.redirectUrl : null)
     }
 </script>
 </html>

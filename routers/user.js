@@ -19,12 +19,12 @@ router.post('/registration', async function (req, res) {
       token: jwt.sign({ email: req.body.email }, config.secret)
     }
   });
-  console.log('body:', user);
   const token = await user.generateAuthToken();
-  console.log(token)
+  const host = `${req.protocol}://${req.hostname}`;
   user.save()
     .then(user=>{
-      sendEmail.confirmEmail(user.email, user.confirm.token)
+      console.log(host, 'awdawd')
+      sendEmail.confirmEmail(user.email, user.confirm.token, host);
       res.send({token, redirect: true});
       console.log(`Save: ${user}`);
     })

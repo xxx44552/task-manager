@@ -23,7 +23,7 @@ export default function Avatar() {
     <>
       <form onSubmit={img}>
         <input type='file' onChange={e=>setFile(e.target.files[0])}/>
-        <input type='submit' value='Save'/>
+        <input className={'btn btn-primary'} type='submit' value='Сохранить'/>
       </form>
 
     </>

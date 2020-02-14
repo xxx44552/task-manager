@@ -24,6 +24,7 @@ export default function App() {
           'Accept': 'application/json'
         }
       }).then( res => res.json()).then(data => {
+        console.log(data)
         if(data.user) {
           setUser(data.user);
           setIsLoader(false);
@@ -60,8 +61,8 @@ export default function App() {
               {user.confirm ? user.confirm.status ? null : <Confirm/> : null}
               <div className="row">
                 <TaskManager/>
-                <div className="col-3">
-                  <div className="card" style={{"width": "250px"}}>
+                <div className="col-md-4 info">
+                  <div className="card">
                     <img  src={`/user/${user._id}/avatar`} className="card-img-top" alt="avatar"/>
                     <div className="card-body">
                       <h5 className="card-title">{user.name}</h5>

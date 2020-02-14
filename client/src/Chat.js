@@ -1,7 +1,7 @@
 import React from 'react';
 import io from 'socket.io-client';
 import {NavLink} from "react-router-dom";
-//let socket = io('http://188.246.235.216:8081');
+let socket = io('https://tm.webinme.ru');
 
 export default class Chat extends React.Component {
 
@@ -17,42 +17,42 @@ export default class Chat extends React.Component {
       showChat: false
     }
   }
-  //
-  // sendMessage = (e) => {
-  //   e.preventDefault();
-  //   if(!this.state.mess) return;
-  //   socket.emit('sendMess', {mess: this.state.mess, name: this.props.user.name, color: this.state.chatColor});
-  //   e.target.reset();
-  //   this.setState({mess: ''});
-  //   localStorage.setItem('messColor', this.state.chatColor)
-  // };
-  //
-  // getCountChatUser = () => {
-  //   socket.on('clientCount', count => {
-  //     console.log(count, '0-0-')
-  //     this.setState({
-  //       countClient: count
-  //     })
-  //   });
-  // }
 
-  // componentDidMount() {
-  //
-  //   this.getCountChatUser();
-  //
-  //   socket.on('addMess', (msg) => {
-  //     this.setState({
-  //       listMess: this.state.listMess.concat(msg)
-  //     })
-  //   });
-  //
-  //   socket.on('user connected', text => {
-  //     this.setState({
-  //       connectNewUSerText: text
-  //     });
-  //     setTimeout(()=>this.setState({connectNewUSerText: null}), 1500);
-  //   });
-  // }
+  sendMessage = (e) => {
+    e.preventDefault();
+    if(!this.state.mess) return;
+    socket.emit('sendMess', {mess: this.state.mess, name: this.props.user.name, color: this.state.chatColor});
+    e.target.reset();
+    this.setState({mess: ''});
+    localStorage.setItem('messColor', this.state.chatColor)
+  };
+
+  getCountChatUser = () => {
+    socket.on('clientCount', count => {
+      console.log(count, '0-0-')
+      this.setState({
+        countClient: count
+      })
+    });
+  }
+
+  componentDidMount() {
+
+    this.getCountChatUser();
+
+    socket.on('addMess', (msg) => {
+      this.setState({
+        listMess: this.state.listMess.concat(msg)
+      })
+    });
+
+    socket.on('user connected', text => {
+      this.setState({
+        connectNewUSerText: text
+      });
+      setTimeout(()=>this.setState({connectNewUSerText: null}), 1500);
+    });
+  }
 
 
 
@@ -85,25 +85,25 @@ export default class Chat extends React.Component {
                     <h5>Чат</h5>
                     <span className={'small'}>Кол. подкл. пользователей {countClient}</span>
                     {connectNewUSerText?<div>{connectNewUSerText}</div>:null}
-                    {/*<div className="chat-wrap">*/}
-                    {/*  <div className={'chat-place'}>*/}
-                    {/*    {*/}
-                    {/*      listMess.map((el, i) => {*/}
-                    {/*        return <h6  key={i}><b style={{color: el.color}}>{el.name} - </b>{el.mess}</h6>*/}
-                    {/*      })*/}
-                    {/*    }*/}
-                    {/*  </div>*/}
-                    {/*</div>*/}
-                    {/*<form onSubmit={this.sendMessage}>*/}
-                    {/*  <textarea className={'form-control'} onChange={e=>this.setState({mess: e.target.value})}></textarea>*/}
-                    {/*  <div className="chat-group">*/}
-                    {/*    <span>Цвет:</span>*/}
-                    {/*    <input type='color' defaultValue={chatColor} onChange={e=> {*/}
-                    {/*      this.setState({chatColor: e.target.value})*/}
-                    {/*    }}/>*/}
-                    {/*    <button className={'btn btn-outline-success add-text'}>Отправить</button>*/}
-                    {/*  </div>*/}
-                    {/*</form>*/}
+                    <div className="chat-wrap">
+                      <div className={'chat-place'}>
+                        {
+                          listMess.map((el, i) => {
+                            return <h6  key={i}><b style={{color: el.color}}>{el.name} - </b>{el.mess}</h6>
+                          })
+                        }
+                      </div>
+                    </div>
+                    <form onSubmit={this.sendMessage}>
+                      <textarea className={'form-control'} onChange={e=>this.setState({mess: e.target.value})}></textarea>
+                      <div className="chat-group">
+                        <span>Цвет:</span>
+                        <input type='color' defaultValue={chatColor} onChange={e=> {
+                          this.setState({chatColor: e.target.value})
+                        }}/>
+                        <button className={'btn btn-outline-success add-text'}>Отправить</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
                 : null

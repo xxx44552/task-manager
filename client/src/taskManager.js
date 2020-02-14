@@ -109,13 +109,13 @@ export default function TaskManager(props) {
 
   function hideCompletedTasks(e) {
     const status = Number(e.target.value);
-    console.log(status)
+    console.log(Boolean(status))
     if(status) {
 
       setSkip(5);
-      setHideCompleted(false);
+      setHideCompleted(true);
       setHideShowMoreBtn(false);
-      fetch(`/tasks?completed=${hideCompleted}&limit=${step}`, {
+      fetch(`/tasks?completed=${Boolean(status)}&limit=${step}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -127,9 +127,9 @@ export default function TaskManager(props) {
       });
     }else {
       setSkip(5);
-      setHideCompleted(true);
+      setHideCompleted(false);
       setHideShowMoreBtn(false);
-      fetch(`/tasks?completed=${hideCompleted}&limit=${step}`, {
+      fetch(`/tasks?completed=${Boolean(status)}&limit=${step}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ export default function TaskManager(props) {
 
   return (
       <>
-        <div className={'col-9 main'}>
+        <div className={'col-md-8 main'}>
           <div>
             <form onSubmit={e=>task(e)}>
               <div className="form-group">
@@ -156,7 +156,7 @@ export default function TaskManager(props) {
             <hr />
             <div>
               <select className={"form-control"} onChange={hideCompletedTasks}>
-                <option value='0'>Все</option>
+                <option defaultValue value='0'>Все</option>
                 <option value='1'>Показать выполненные</option>
               </select>
             </div>
@@ -167,11 +167,13 @@ export default function TaskManager(props) {
               tasks.length !== 0 ? tasks.map(({title, status, _id}, i) => {
                 return <div key={_id} className={'list-group task'}>
                   <p className={status ? "list-group-item list-group-item-success item" : "list-group-item"}>{title}</p>
-                  <div className="custom-control custom-switch">
-                    <input data-id={_id} type='checkbox' onChange={setChecked} defaultChecked={status} className="custom-control-input" id={`customSwitch${i}`} />
-                    <label className="custom-control-label" htmlFor={`customSwitch${i}`}></label>
+                  <div className="btns-wrap">
+                    <div className="custom-control custom-switch">
+                      <input data-id={_id} type='checkbox' onChange={setChecked} defaultChecked={status} className="custom-control-input" id={`customSwitch${i}`} />
+                      <label className="custom-control-label" htmlFor={`customSwitch${i}`}></label>
+                    </div>
+                    <button className={'badge badge-danger'} data-id={_id} onClick={e=>del(e)}>Удалить</button>
                   </div>
-                  <button className={'badge badge-danger'} data-id={_id} onClick={e=>del(e)}>Удалить</button>
                 </div>
               }) : <h5>Нету еще тасков</h5>
             }

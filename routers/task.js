@@ -36,11 +36,13 @@ router.get('/tasks', auth, async (req, res) => {
   const limit = req.query.limit;
   const completed = req.query.completed.match(/true/) ? true : false;
 
-  console.log(completed)
+  console.log(req.query.completed, '****')
 
   const id = mongoose.Types.ObjectId(req.user.id);
   const find = completed ? {owner: id, status: true} : {owner: id};
   const tasks = await Task.find(find).skip(Number(skip)).limit(Number(limit));
+
+  console.log(find)
 
   res.send(tasks);
 });

@@ -15,7 +15,7 @@ router.get('/confirm/:token', async (req, res) => {
     delete user.confirm.token;
     await user.save();
     sendMail.sendText(user.email, `${user.email} - адрес подвтержден`, 'Подтверждение email');
-    res.send()
+    res.redirect('/')
   }else {
     res.sendStatus(500)
   }

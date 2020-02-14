@@ -1,4 +1,5 @@
-const nodemailer = require('nodemailer')
+const nodemailer = require('nodemailer');
+
 
 var transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -8,8 +9,8 @@ var transporter = nodemailer.createTransport({
   }
 });
 
-function restorePassword(email, token) {
-  const url = `http://localhost:5000/restore/${token}`;
+function restorePassword(email, token, host) {
+  const url = `${host}/restore/${token}`;
   const mailOptions = {
     from: 'nodejs',
     to: email,
@@ -28,8 +29,9 @@ function restorePassword(email, token) {
   });
 }
 
-function confirmEmail(email, token) {
-  const url = `http://localhost:5000/confirm/${token}`;
+function confirmEmail(email, token, host) {
+  const url = `${host}/confirm/${token}`;
+  console.log(url, '////')
   const mailOptions = {
     from: 'nodejs',
     to: email,

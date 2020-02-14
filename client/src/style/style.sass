@@ -1,6 +1,7 @@
 body
     padding-bottom: 25px
 
+
 .close
     margin-left: auto
 
@@ -87,7 +88,90 @@ body
 .chat-wrap
     height: 160px
     padding: 5px
-    border: 1px solid grey
+    border: 1px dotted grey
     border-radius: 5px
     margin-bottom: 20px
     overflow-y: scroll
+
+.edit-form
+    display: flex
+    flex-direction: column
+
+    input
+        margin: 5px 0
+        display: block
+        padding: 2px 5px
+
+.navbar-nav
+    flex-direction: row !important
+    .nav-item
+        margin-right: 10px
+
+.check-email
+    padding: 15px
+
+input[type="file"]
+    margin-bottom: 10px
+
+.info
+    .card
+        width: 100%
+
+.btns-wrap
+    display: flex
+
+
+@media (max-width: 768px)
+    .login-form
+        width: calc(100% - 10px)
+    .chat
+        width: 100%
+        right: 0
+        bottom: 0
+
+    .main
+        order: 1
+    .info
+        order: 0
+        margin-bottom: 10px
+
+        .card
+            p
+                margin-bottom: 5px
+                font-size: 15px
+            img
+                width: 220px
+                display: block
+                margin: 20px auto 0
+
+@media (max-width: 460px)
+
+    .wrap
+        padding-bottom: 35px
+
+    .tasks-wrap
+
+        .list-group
+            flex-direction: column !important
+
+    .btns-wrap
+        width: 100%
+        justify-content: flex-end
+        margin-bottom: 10px
+        padding-bottom: 10px
+        border-bottom: 1px solid grey
+
+    .list-group-item
+        font-size: 15px
+        padding: 10px !important
+
+    .chat-icon
+        bottom: 15px
+        right: 15px
+
+@media (max-width: 560px)
+
+    .chat-wrap
+        height: 70vh
+    .chat
+        height: 100vh

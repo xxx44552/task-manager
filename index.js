@@ -11,7 +11,7 @@ const restoreRouter = require('./routers/restorePass');
 const confirmRouter = require('./routers/confirmEmail');
 const hbs = require('hbs');
 const path = require('path');
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {origins: '*:*'});
 
 const {port} = require('./config');
 
@@ -32,7 +32,7 @@ app.use(uploadRouter);
 app.use(restoreRouter);
 app.use(confirmRouter);
 
-app.get("/*", function(req, res){
+app.get("*", function(req, res){
   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
 
