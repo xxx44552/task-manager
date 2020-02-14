@@ -9,6 +9,11 @@ export default function TaskManager(props) {
   const [skip, setSkip] = useState(step);
   const [hideShowMoreBtn, setHideShowMoreBtn] = useState(false);
   const [hideCompleted, setHideCompleted] = useState(false);
+  const [minText, setMinText] = useState(true);
+
+  const style = {
+    color: "green"
+  };
 
   useEffect(()=> {
     fetch('/api', {
@@ -24,7 +29,7 @@ export default function TaskManager(props) {
   }, []);
 
   function task(e) {
-
+    console.log(minText)
     e.preventDefault();
     fetch('/task', {
       method: 'post',
@@ -149,7 +154,11 @@ export default function TaskManager(props) {
             <form onSubmit={e=>task(e)}>
               <div className="form-group">
                 <label htmlFor="exampleFormControlTextarea1">Добавить новое задание</label>
-                <textarea onChange={e=>setTitle(e.target.value)} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <span className={'min-text'} style={!minText?style:null}>Миннимум 10 символов</span>
+                <textarea onChange={e=>{
+                  e.target.value.length < 10 ? setMinText(true) : setMinText(false);
+                  setTitle(e.target.value)
+                }} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
               </div>
               <input type='submit' className={'btn btn-primary'} value='Отправить'/>
             </form>
