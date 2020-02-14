@@ -20,7 +20,6 @@ export default function Registration() {
     !age || age.length < 1 && age.length > 150 ? setError('Возраст от 1 до 150') : console.log(age);
     !password || password.length < 7 ? setError('Пароль должен быть не менее 7 символов') : console.log(password);
     (!validateEmail(email)) ? setError('Неверная почта') : console.log(email);
-    if(!error) return;
 
     fetch('/registration', {
       method: 'post',
