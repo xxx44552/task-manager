@@ -20,7 +20,7 @@ router.post('/registration', async function (req, res) {
     }
   });
   const token = await user.generateAuthToken();
-  const host = `${req.protocol}://${req.hostname}`;
+  const host = `https://${req.hostname}`;
   user.save()
     .then(user=>{
       console.log(host, 'awdawd')

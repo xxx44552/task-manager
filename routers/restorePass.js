@@ -7,7 +7,7 @@ const sendMail = require('./../email');
 router.post('/restore', async function (req, res) {
   if(!req.body) return res.sendStatus(500);
   try {
-    const host = `${req.protocol}://${req.hostname}`;
+    const host = `https://${req.hostname}`;
     const {email} = req.body;
     if(email) {
       const user = await User.findOne({email});
@@ -45,7 +45,7 @@ router.post('/restore/:token', async (req, res) => {
     user.password = password;
     delete user.restore;
     user.save();
-    const host = `${req.protocol}://${req.hostname}`;
+    const host = `https://${req.hostname}`;
     res.send({redirect: true, redirectUrl: `${host}/login`});
   }else {
     res.sendStatus(500)
