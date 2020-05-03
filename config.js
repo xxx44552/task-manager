@@ -1,8 +1,8 @@
 const config = {
   port: 8081,
   secret: 'awjkh34oujklw3dkjh',
-  email: 'webinme.ru@gmail.com',
-  password: '1234567vV'
+  user: process.env.googleEmail,
+  pass: process.env.googleEmailPassword
 };
 
 module.exports = config;
